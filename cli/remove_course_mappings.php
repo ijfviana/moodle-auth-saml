@@ -26,17 +26,16 @@
  * Based on plugins made by Sergio Gómez (moodle_ssp) and Martin Dougiamas (Shibboleth).
  */
 
-defined('MOODLE_INTERNAL') || die();
-/**
- * @param int $oldversion the version we are upgrading from
- * @return bool result
- */
-function xmldb_auth_saml_upgrade($oldversion) {
-    if ($oldversion < 2018020601) {
-        upgrade_fix_config_auth_plugin_names('saml');
-        upgrade_fix_config_auth_plugin_defaults('saml');
-        upgrade_plugin_savepoint(true, 2018020601, 'auth', 'saml');
-    }
+define('CLI_SCRIPT', true);
 
-    return true;
-}
+// Global moodle config file.
+require(dirname(dirname(dirname(__DIR__))).'/config.php');
+global $CFG;
+require_once("$CFG->libdir/clilib.php");
+
+set_debugging(DEBUG_DEVELOPER, true);
+
+global $DB;
+
+$configTable = 'config_plugins';
+$DB->delete_records_select($configTable, "name LIKE 'course_mapping_%'");

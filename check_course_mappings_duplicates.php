@@ -26,17 +26,31 @@
  * Based on plugins made by Sergio Gómez (moodle_ssp) and Martin Dougiamas (Shibboleth).
  */
 
-defined('MOODLE_INTERNAL') || die();
-/**
- * @param int $oldversion the version we are upgrading from
- * @return bool result
- */
-function xmldb_auth_saml_upgrade($oldversion) {
-    if ($oldversion < 2018020601) {
-        upgrade_fix_config_auth_plugin_names('saml');
-        upgrade_fix_config_auth_plugin_defaults('saml');
-        upgrade_plugin_savepoint(true, 2018020601, 'auth', 'saml');
-    }
+// We load all moodle config and libs.
+require_once(dirname(dirname(__DIR__)).'/config.php');
+require_once($CFG->dirroot.'/auth/saml/locallib.php');
 
-    return true;
+// Validate that the user has admin rights.
+if (!is_siteadmin()) {
+    die('Only admins can execute this action.');
+}
+
+$pluginconfig = get_config('auth_saml');
+
+$coursemapping = get_course_mapping_for_sync($pluginconfig, true);
+
+$reversecoursemapping = [];
+foreach ($coursemapping as $key => $values) {
+    foreach ($values as $value) {
+        if (!isset($reversecoursemapping[$value])) {
+            $reversecoursemapping[$value] = [];
+        }
+        $reversecoursemapping[$value][] = $key;
+    }
+}
+
+foreach ($reversecoursemapping as $key => $values) {
+    if (count($values) > 1) {
+        print "Duplicate mapping <b>".$key.'</b> on Moodle courses: <b>'.implode('</b>, <b>', $values).'</b><br>';
+    }
 }
