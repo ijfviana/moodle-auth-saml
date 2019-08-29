@@ -32,10 +32,10 @@ if (!defined('MOODLE_INTERNAL')) {
 }
 
 $rolemapping = get_role_mapping_for_sync($pluginconfig);
-$coursemapping = get_course_mapping_for_sync($pluginconfig);
+
 
 $mappedroles = [];
-$mappedcourses = [];
+$mappedcourses = null;
 
 foreach ($samlcourses as $key => $course) {
     $mappedrole = $mappedcourseid = null;
@@ -56,12 +56,14 @@ foreach ($samlcourses as $key => $course) {
                     }
                 }
 
-                $mappedcourseids = [];
-                foreach ($coursemapping as $id => $values) {
+                $mappedcourseids = get_course_mapping_for_sync($courseid);
+                /*foreach ($coursemapping as $id => $values) {
                     if (in_array($courseid, $values)) {
                         $mappedcourseids[] = $id;
                     }
-                }
+                }*/
+                
+                
 
                 if (isset($status) && isset($mappedrole) && !empty($mappedcourseids)) {
                     if (!in_array($mappedrole, $mappedroles)) {

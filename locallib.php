@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,7 +26,6 @@
  *
  * Based on plugins made by Sergio Gómez (moodle_ssp) and Martin Dougiamas (Shibboleth).
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -64,9 +64,9 @@ function get_saml_assignable_role_names($user = null) {
             foreach ($systemroles as $systemrole) {
                 if (property_exists($systemrole, $shortname) && $systemrole->shortname == $shortname) {
                     $roles[] = ['id' => $systemrole->id,
-                                     'shortname' => $shortname,
-                                     'localname' => $systemrole->localname,
-                                     'settingname' => $shortname . 'context'];
+                        'shortname' => $shortname,
+                        'localname' => $systemrole->localname,
+                        'settingname' => $shortname . 'context'];
                     break;
                 }
             }
@@ -80,7 +80,7 @@ function get_role_mapping_for_sync($pluginconfig, $addempties = false) {
     $rolemapping = [];
 
     foreach (get_all_roles() as $role) {
-        $field = 'role_mapping_'.trim(strtolower(str_replace("-", "_", $role->shortname)));
+        $field = 'role_mapping_' . trim(strtolower(str_replace("-", "_", $role->shortname)));
         if (property_exists($pluginconfig, $field)) {
             $value = $pluginconfig->{"$field"};
             if (!empty($value) || $addempties) {
@@ -96,26 +96,24 @@ function get_all_courses_available() {
     /* return get_courses(); */
 
     global $DB;
-    $query = "SELECT id, idnumber, shortname from {course} WHERE id !=".SITEID;
+    $query = "SELECT id, idnumber, shortname from {course} WHERE id !=" . SITEID;
     $courses = $DB->get_records_sql($query);
     return $courses;
 }
 
-function get_course_mapping_for_sync($pluginconfig, $addempties = false) {
-    $coursemapping = [];
+function get_course_mapping_for_sync($courseid) {
 
-    $courses = get_all_courses_available();
+    global $DB;
 
-    foreach ($courses as $course) {
-        $field = 'course_mapping_'.convert_to_valid_setting_name($course->shortname);
-        if (property_exists($pluginconfig, $field)) {
-            $value = $pluginconfig->{"$field"};
-            if (!empty($value) || $addempties) {
-                $coursemapping[$course->shortname] = explode(",", $value);
-            }
-        }
+    $mappedcourseids = [];
+
+    foreach ($courseid as $mapping) {
+
+        $mappedcourseids[] = $DB->get_record('course_mapping', ['saml_id' => $mapping->id]);
     }
-    return $coursemapping;
+
+
+    return $mappedcourseids;
 }
 
 function clean_values($values) {
@@ -129,8 +127,8 @@ function convert_to_valid_setting_name($value) {
     $value = strtolower($value);
     $value = preg_replace('/\s+/', '', $value);
     $value = str_replace("-", "_", $value);
-    $value = str_replace(array("á","é", "í", "ó", "ú"), array("a","e", "i", "o", "u"), $value);
-    $value = str_replace(array("ä","ë", "ï", "ö", "ü"), array("a","e", "i", "o", "u"), $value);
+    $value = str_replace(array("á", "é", "í", "ó", "ú"), array("a", "e", "i", "o", "u"), $value);
+    $value = str_replace(array("ä", "ë", "ï", "ö", "ü"), array("a", "e", "i", "o", "u"), $value);
     $value = str_replace("ñ", "n", $value);
     $value = preg_replace('/[^a-z0-9_]/', '', $value);
     return $value;
