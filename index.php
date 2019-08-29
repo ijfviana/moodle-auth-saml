@@ -187,36 +187,37 @@ if (!$validsamlsession) {
         auth_saml_error($err, $CFG->wwwroot . '/auth/saml/login.php', $pluginconfig->samllogfile, true);
     }
 
-    if (!empty($enrolconfig)) {
-        $samlcourses = [];
-        if ($enrolconfig->supportcourses != 'nosupport' && isset($pluginconfig->courses)) {
-            if (!isset($samlattributes[$pluginconfig->courses])) {
-                $err['login'] = get_string("auth_saml_courses_not_found", "auth_saml", $pluginconfig->samlcourses);
-                auth_saml_error($err['login'], $CFG->wwwroot . '/auth/saml/login.php', $pluginconfig->samllogfile);
-            }
-            $samlcourses = $samlattributes[$pluginconfig->courses];
-        }
 
-        // Obtain the course_mapping. Now $USER->mapped_courses have the mapped courses and $USER->mapped_roles the roles.
-        if (!empty($samlcourses) && $enrolconfig->supportcourses != 'nosupport') {
-            $anycourseactive = false;
-            include_once($CFG->dirroot . '/auth/saml/course_and_role_mapping.php');
-            if (!isset($SAML_COURSE_INFO)) {
-                $SAML_COURSE_INFO = new stdClass();
-            }
-            $SAML_COURSE_INFO->mapped_roles = $mappedroles;
-            $SAML_COURSE_INFO->mapped_courses = $mappedcourses;
+    $samlcourses = [];
+    if ($enrolconfig->supportcourses != 'nosupport' && isset($enrolconfig->courses)) {
+        if (!isset($samlattributes[$enrolconfig->courses])) {
+            $err['login'] = get_string("auth_saml_courses_not_found", "auth_saml", $enrolconfig->samlcourses);
+            auth_saml_error($err['login'], $CFG->wwwroot . '/auth/saml/login.php', $enrolconfig->samllogfile);
         }
-
-        $userauthorized = true;
-        $errorauthorizing = '';
-
-        // If user not exist in Moodle and not valid course active.
-        if (!$userexists && (isset($anycourseactive) && !$anycourseactive)) {
-            $errorauthorizing = get_string("auth_saml_not_authorize", "auth_saml", $username);
-            $userauthorized = false;
-        }
+        $samlcourses = $samlattributes[$enrolconfig->courses];
     }
+
+    // Obtain the course_mapping. Now $USER->mapped_courses have the mapped courses and $USER->mapped_roles the roles.
+    if (!empty($samlcourses) && $enrolconfig->supportcourses != 'nosupport') {
+        $anycourseactive = false;
+        include_once($CFG->dirroot . '/auth/saml/course_and_role_mapping.php');
+        if (!isset($SAML_COURSE_INFO)) {
+            $SAML_COURSE_INFO = new stdClass();
+        }
+        $SAML_COURSE_INFO->mapped_roles = $mappedroles;
+        $SAML_COURSE_INFO->mapped_courses = $mappedcourses;
+    }
+
+    $userauthorized = true;
+    $errorauthorizing = '';
+
+
+    // If user not exist in Moodle and not valid course active.
+    if (!$userexists && (isset($anycourseactive) && !$anycourseactive)) {
+        $errorauthorizing = get_string("auth_saml_not_authorize", "auth_saml", $username);
+        $userauthorized = false;
+    }
+
 
     if (function_exists('saml_hook_authorize_user')) {
         $result = saml_hook_authorize_user($username, $samlattributes, $userauthorized);
