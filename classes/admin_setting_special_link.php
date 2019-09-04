@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @package    auth_saml
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_enrol_admin_setting_special_link extends admin_setting
+class auth_saml_admin_setting_special_link extends admin_setting
 {
     private $link;
 

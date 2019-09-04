@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -25,7 +26,6 @@
  *
  * Based on plugins made by Sergio Gómez (moodle_ssp) and Martin Dougiamas (Shibboleth).
  */
-
 if (!defined('MOODLE_INTERNAL')) {
     // It must be included from a Moodle page.
     die('Direct access to this script is forbidden.');
@@ -57,13 +57,12 @@ foreach ($samlcourses as $key => $course) {
                 }
 
                 $mappedcourseids = get_course_mapping_for_sync($courseid);
-                /*foreach ($coursemapping as $id => $values) {
-                    if (in_array($courseid, $values)) {
-                        $mappedcourseids[] = $id;
-                    }
-                }*/
-                
-                
+                /* foreach ($coursemapping as $id => $values) {
+                  if (in_array($courseid, $values)) {
+                  $mappedcourseids[] = $id;
+                  }
+                  } */
+
 
                 if (isset($status) && isset($mappedrole) && !empty($mappedcourseids)) {
                     if (!in_array($mappedrole, $mappedroles)) {
@@ -81,7 +80,7 @@ foreach ($samlcourses as $key => $course) {
                         ];
 
                         if (!$anycourseactive && $status == 'active') {
-                              $anycourseactive = true;
+                            $anycourseactive = true;
                         }
                     }
                 } else if (!isset($status)) {
@@ -90,7 +89,7 @@ foreach ($samlcourses as $key => $course) {
                     $err['course_enrollment'][] = get_string('auth_saml_role_not_found', 'auth_saml');
                 } else {
                     $strobj = new stdClass();
-                    $strobj->course = '('.$courseid.' -- '.$period.')';
+                    $strobj->course = '(' . $courseid . ' -- ' . $period . ')';
                     $strobj->user = $username;
                     $err['course_enrollment'][] = get_string('auth_saml_course_not_found', 'auth_saml', $strobj);
                 }

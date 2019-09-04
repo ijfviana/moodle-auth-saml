@@ -79,16 +79,7 @@ if ($ADMIN->fulltree) {
 
     $settings->add($setting);
 
-    $name = 'auth_saml/supportcourses';
-    $title = get_string('auth_saml_supportcourses', 'auth_saml');
-    $description = get_string('auth_saml_supportcourses_description', 'auth_saml');
-    $default = "nosupport";
-    $choices = [
-        "nosupport" => "nosupport",
-        "internal" => "internal"
-    ];
-    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-    $settings->add($setting);
+    
 
     $name = 'auth_saml/username';
     $title = get_string('auth_saml_username', 'auth_saml');
@@ -104,12 +95,7 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_RAW);
     $settings->add($setting);
 
-    $name = 'auth_saml/courses';
-    $title = get_string('auth_saml_courses', 'auth_saml');
-    $description = get_string('auth_saml_courses_description', 'auth_saml');
-    $default = 'schacUserStatus';
-    $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_RAW);
-    $settings->add($setting);
+    
 
     $name = 'auth_saml/dosinglelogout';
     $title = get_string('auth_saml_dosinglelogout', 'auth_saml');
@@ -193,7 +179,6 @@ if ($ADMIN->fulltree) {
         $settings->add($setting);
     }
 
-    
 
     // Display locking / mapping of profile fields.
     $authplugin = get_auth_plugin('saml');
@@ -238,9 +223,5 @@ if ($ADMIN->fulltree) {
         }
     }
 
-
-
-    require_once($CFG->dirroot.'/auth/saml/classes/admin_setting_special_javascript.php');
-    $setting = new auth_saml_admin_setting_javascript();
-    $settings->add($setting);
+    
 }
