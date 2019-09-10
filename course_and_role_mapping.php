@@ -35,7 +35,7 @@ $rolemapping = get_role_mapping_for_sync($pluginconfig);
 
 
 $mappedroles = [];
-$mappedcourses = null;
+$mappedcourses = [];
 
 foreach ($samlcourses as $key => $course) {
     $mappedrole = $mappedcourseid = null;
@@ -64,15 +64,16 @@ foreach ($samlcourses as $key => $course) {
                   } */
 
 
+
                 if (isset($status) && isset($mappedrole) && !empty($mappedcourseids)) {
                     if (!in_array($mappedrole, $mappedroles)) {
                         $mappedroles[] = $mappedrole;
                     }
                     foreach ($mappedcourseids as $mappedcourseid) {
-                        $mappedcourses[$mappedrole][$status][$mappedcourseid] = [
+                        $mappedcourses[$mappedrole][$status][$mappedcourseid->course_id] = [
                             'country' => $country,
                             'domain' => $domain,
-                            'course_id' => $mappedcourseid,
+                            'course_id' => $mappedcourseid->course_id,
                             'period' => $period,
                             'role' => $mappedrole,
                             'status' => $status,
