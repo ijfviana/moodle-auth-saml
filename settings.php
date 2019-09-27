@@ -41,10 +41,12 @@ if ($ADMIN->fulltree) {
             }
 
             $pluginconfig = get_config('auth_saml');
-            $param['samllib'] = $pluginconfig->samllib;
+            $saml_param['samllib'] = $pluginconfig->samllib;
+            $saml_param['sp_source'] = $pluginconfig->sp_source;
+            $saml_param['dosinglelogout'] = $pluginconfig->dosinglelogout;
 
             // Save saml settings in a file.
-            $encodedparam = json_encode($param);
+            $encodedparam = json_encode($saml_param);
             file_put_contents($samlconfigfile, $encodedparam);
         }
     }
