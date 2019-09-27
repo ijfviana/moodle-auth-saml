@@ -101,21 +101,13 @@ function get_all_courses_available() {
     return $courses;
 }
 
-function get_course_mapping_for_sync($pluginconfig, $addempties = false) {
-    $coursemapping = [];
+function get_course_mapping_for_sync($courseid) {
 
-    $courses = get_all_courses_available();
+    global $DB;
+    
 
-    foreach ($courses as $course) {
-        $field = 'course_mapping_'.convert_to_valid_setting_name($course->shortname);
-        if (property_exists($pluginconfig, $field)) {
-            $value = $pluginconfig->{"$field"};
-            if (!empty($value) || $addempties) {
-                $coursemapping[$course->shortname] = explode(",", $value);
-            }
-        }
-    }
-    return $coursemapping;
+   
+    return $DB->get_records('course_mapping', ['saml_id' => $courseid]);
 }
 
 function clean_values($values) {

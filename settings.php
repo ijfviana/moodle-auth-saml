@@ -81,16 +81,7 @@ if ($ADMIN->fulltree) {
 
     $settings->add($setting);
 
-    $name = 'auth_saml/supportcourses';
-    $title = get_string('auth_saml_supportcourses', 'auth_saml');
-    $description = get_string('auth_saml_supportcourses_description', 'auth_saml');
-    $default = "nosupport";
-    $choices = [
-        "nosupport" => "nosupport",
-        "internal" => "internal"
-    ];
-    $setting = new admin_setting_configselect($name, $title, $description, $default, $choices);
-    $settings->add($setting);
+    
 
     $name = 'auth_saml/username';
     $title = get_string('auth_saml_username', 'auth_saml');
@@ -106,12 +97,7 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_RAW);
     $settings->add($setting);
 
-    $name = 'auth_saml/courses';
-    $title = get_string('auth_saml_courses', 'auth_saml');
-    $description = get_string('auth_saml_courses_description', 'auth_saml');
-    $default = 'schacUserStatus';
-    $setting = new admin_setting_configtext($name, $title, $description, $default, PARAM_RAW);
-    $settings->add($setting);
+    
 
     $name = 'auth_saml/dosinglelogout';
     $title = get_string('auth_saml_dosinglelogout', 'auth_saml');
@@ -195,12 +181,6 @@ if ($ADMIN->fulltree) {
         $settings->add($setting);
     }
 
-    $name = 'auth_saml/ignoreinactivecourses';
-    $title = get_string('auth_saml_ignoreinactivecourses', 'auth_saml');
-    $description = get_string('auth_saml_ignoreinactivecourses_description', 'auth_saml');
-    $default = true;
-    $setting = new admin_setting_configcheckbox($name, $title, $description, $default, true, false);
-    $settings->add($setting);
 
     // Display locking / mapping of profile fields.
     $authplugin = get_auth_plugin('saml');
@@ -245,52 +225,5 @@ if ($ADMIN->fulltree) {
         }
     }
 
-    $settings->add(
-        new admin_setting_heading(
-            'auth_saml/coursemapping',
-            new lang_string('auth_saml_coursemapping', 'auth_saml'),
-            new lang_string('auth_saml_coursemapping_head', 'auth_saml')
-        )
-    );
-
-    $courses = get_courses();
-
-    if (!empty($courses)) {
-        $settings->add(
-            new auth_saml_admin_setting_special_link(
-                'auth_saml/coursemapping_export',
-                new lang_string('auth_saml_mapping_export', 'auth_saml'),
-                $CFG->wwwroot.'/auth/saml/course_mappings_to_csv.php'
-            )
-        );
-
-        foreach ($courses as $course) {
-            if ($course->id == SITEID) {
-                continue;
-            }
-            $name = 'auth_saml/course_mapping_'.convert_to_valid_setting_name($course->shortname);
-            $title = $course->shortname;
-            if (!empty($course->idnumber)) {
-                $title .= ' - ' . $course->idnumber;
-            }
-            $description = '';
-            $default = null;
-            $setting = new admin_setting_configtextarea_trim($name, $title, $description, $default, PARAM_RAW, '80', '2');
-            $settings->add($setting);
-        }
-
-        
-        $settings->add(
-            new auth_saml_admin_setting_special_link(
-                'auth_saml/check_mapping_duplicates',
-                new lang_string('auth_saml_check_mapping_duplicates', 'auth_saml'),
-                $CFG->wwwroot.'/auth/saml/check_course_mappings_duplicates.php',
-                true
-            )
-        );
-    }
-
-    require_once($CFG->dirroot.'/auth/saml/classes/admin_setting_special_javascript.php');
-    $setting = new auth_saml_admin_setting_javascript();
-    $settings->add($setting);
+    
 }
