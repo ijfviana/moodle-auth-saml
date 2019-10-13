@@ -104,9 +104,7 @@ function get_all_courses_available() {
 function get_course_mapping_for_sync($courseid) {
 
     global $DB;
-    
 
-   
     return $DB->get_records('course_mapping', ['saml_id' => $courseid]);
 }
 
