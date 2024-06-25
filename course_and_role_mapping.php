@@ -70,10 +70,10 @@ foreach ($samlcourses as $key => $course) {
                         $mappedroles[] = $mappedrole;
                     }
                     foreach ($mappedcourseids as $mappedcourseid) {
-                        $mappedcourses[$mappedrole][$status][$mappedcourseid->course_id] = [
+                        $mappedcourses[$mappedrole][$status][$mappedcourseid->lms_course_id] = [
                             'country' => $country,
                             'domain' => $domain,
-                            'course_id' => $mappedcourseid->course_id,
+                            'course_id' => $mappedcourseid->lms_course_id,
                             'period' => $period,
                             'role' => $mappedrole,
                             'status' => $status,
