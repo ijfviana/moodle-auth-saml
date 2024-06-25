@@ -207,6 +207,7 @@ if (!$validsamlsession) {
         }
         $SAML_COURSE_INFO->mapped_roles = $mappedroles;
         $SAML_COURSE_INFO->mapped_courses = $mappedcourses;
+        auth_saml_log_info(" Mapped_courses found for " . $username . " " . print_r($mappedcourses,true), $pluginconfig->samllogfile);
     }
 
     $userauthorized = true;
