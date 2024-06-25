@@ -105,7 +105,7 @@ function get_course_mapping_for_sync($courseid) {
 
     global $DB;
 
-    return $DB->get_records('course_mapping', ['saml_id' => $courseid]);
+    return $DB->get_records('course_mapping', ['saml_course_id' => $courseid]);
 }
 
 function clean_values($values) {
